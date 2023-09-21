@@ -1,8 +1,8 @@
 import React from 'react'
 
-const TextInput = () => {
+const TextInput = ({value, onChange}) => {
   return (
-    <input placeholder='Search' type='text'/>
+    <input placeholder='Search' type='text' value={value} onChange={onChange}/>
   )
 }
 
