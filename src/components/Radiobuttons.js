@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
-function RadioButtons() {
-  const [selectedOption, setSelectedOption] = useState('');
-
+function RadioButtons({ onGradeChange, selectedGrade }) {
   const grades = ['A', 'B+', 'B', 'C+', 'C', 'D', 'F'];
 
   const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+    onGradeChange(event.target.value);
   };
 
   return (
@@ -16,10 +14,10 @@ function RadioButtons() {
           <div key={index}>
             <label>
               <input
-                id=''
+                id=""
                 type="radio"
                 value={grade}
-                checked={selectedOption === grade}
+                checked={selectedGrade === grade}
                 onChange={handleOptionChange}
               />
               {grade}
@@ -27,8 +25,6 @@ function RadioButtons() {
           </div>
         ))}
       </form>
-
-      <p>{selectedOption}</p>
     </div>
   );
 }
