@@ -6,23 +6,58 @@ import Header from './components/Header';
 import Category from './components/Category';
 import Items from './components/Items';
 import { useState } from 'react';
+import Radiobuttons from './components/Radiobuttons';
 
-const sportingGoods = [
-  {id:1, name: "Football", price: 49.99, stock: 0},
-  {id:2, name: "BaseBall", price: 9.99, stock: 1},
-  {id:3, name: "BasketBall", price: 29.99, stock: 2},
+const subjectGrade = [
+  {id:1, courseNo: 101, courseName: 'English', Units: 3 , Grade: "A"},
+  {id:2, courseNo: 202, courseName: 'Math', Units: 3, Grade: "A"},
+  {id:3, courseNo: 303, courseName: "Chinese", Units: 3, Grade: "B"},
 ]
 
 function App() {
 
+  const calculateQPI = (grades) => {
+    const gradeToPoints = {
+      'A': 4.0,
+      'B+': 3.5,
+      'B': 3.0,
+      'C+': 2.5,
+      'C': 2.0,
+      'D': 1.0,
+      'F': 0.0,
+    };
+
+    // Calculate total points and total units
+    let totalPoints = 0;
+    let totalUnits = 0;
+
+    for (const subject of data) {
+      const grade = subject.Grade;
+      const units = subject.Units;
+
+      if (gradeToPoints.hasOwnProperty(grade)) {
+        totalPoints += gradeToPoints[grade] * units;
+        totalUnits += units;
+      }
+    }
+
+    // Calculate QPI
+    if (totalUnits === 0) {
+      return 0; // Avoid division by zero
+    } else {
+      return (totalPoints / totalUnits).toFixed(2);
+    }
+  };
+
   const[textValue, setTxtValue] = useState('')
   const[form, setForm] = useState({
-    nameItem: '',
-    priceItem: 0,
-    stockItem: 0,
+    CourseNo: 0,
+    CourseName: "",
+    Units: 0,
+    Grade:""
   })
   const[showOnlyStock, setShowOnlyStock]=useState(false)
-  const[data, setData]=useState(sportingGoods)
+  const[data, setData]=useState(subjectGrade)
 
   const handleClick=()=>{
     alert('Hatdog')
@@ -34,48 +69,59 @@ function App() {
     e.preventDefault()
     console.log(form)
 
-    setData([...data, {id: data.length + 1, name: form.nameItem, price: form.priceItem, stock: form.stockItem}])
+    setData([...data, {id: data.length + 1, CourseNo: form.CourseNo, CourseName: form.CourseName, Units: form.Units, Grade: form.Grade}])
   }
+  
 
   return (
     <div className="App">
-      <form style={{display:"flex", flexDirection: 'column', gap:10, marginBottom:20}} onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='nameItem'>Name: </label>
-          <br/>
-          <input id="nameItem" type='text' value={form.nameItem} onChange={handleForm}/>
-        </div>
-
-        <div>
-          <label htmlFor='priceItem'>Price: </label>
-          <br/>
-          <input id="priceItem" type='number' value={form.priceItem} onChange={handleForm}/>
-        </div>
-
-        <div>
-          <label htmlFor='stockItem'>Stock: </label>
-          <br/>
-          <input id="stockItem" type='number' value={form.stockItem} onChange={handleForm}/>
-        </div>
-        <button onClick={handleSubmit}>Submit</button>
-
-      </form>
-      <text>My hatdog my</text>
       <TextInput value={textValue} onChange={(e)=> setTxtValue(e.target.value)} />
-      <Checkbox value={showOnlyStock} onChange={(e)=> setShowOnlyStock(e.target.checked)}/>
-      <button type='submit'>Submit</button>
+      <div style={{display:"flex", flexDirection: 'row'}}>
+      <div style={{display:"flex", flexDirection:"column"}}>
+        <form style={{ gap:10, marginBottom:20}} onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor='CourseNo'>CourseNo: </label>
+            <br/>
+            <input id="CourseNo" type='number' value={form.CourseNo} onChange={handleForm}/>
+          </div>
 
-      <table>
+          <div>
+            <label htmlFor='CourseName'>CourseName: </label>
+            <br/>
+            <input id="CourseName" type='text' value={form.CourseName} onChange={handleForm}/>
+          </div>
+
+          <div>
+            <label htmlFor='Units'>Units: </label>
+            <br/>
+            <input id="Units" type='number' value={form.Units} onChange={handleForm}/>
+          </div>
+          <Radiobuttons></Radiobuttons>
+        </form>
+
+        
+
+        <button onClick={handleSubmit}>Submit</button>
+      </div>
+      {/* <text>My hatdog my</text> */}
+      
+      {/* <Checkbox value={showOnlyStock} onChange={(e)=> setShowOnlyStock(e.target.checked)}/>
+      <button type='submit'>Submit</button> */}
+
+      <table style={{display:'flex', flexDirection: "column" , border: "2px"}}>
         <tbody>
         <Header></Header>
-        <Category></Category>
+        {/* <Category></Category> */}
         <Items items={data} includePrice query={textValue} showOnlyStock={showOnlyStock}/>
-        <tr>
-          <td colSpan="2" style={{textAlign: 'right',padding:"2px"}}>Total</td>
-          <td style={{paddingLeft: "27.5px"}}>{data.reduce((total, sportingGoods)=> total+parseInt(sportingGoods.stock), 0)}</td>
-        </tr>
+        {/* <tr>
+          <td colSpan="2" style={{textAlign: 'right',padding:"2px"}}>QPI</td>
+          
+          <td style={{paddingLeft: "27.5px"}}>{data.reduce((total, subjectGrade)=> total+parseInt(subjectGrade.stock), 0)}</td>
+        </tr> */}
         </tbody>
+        <td style={{textAlign:"end", paddingRight:"100px"}}>Total QPI: {calculateQPI(data)}</td>
       </table>
+      </div>
     </div>
   );
 }

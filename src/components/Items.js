@@ -1,20 +1,25 @@
-import React from 'react'
+import React from 'react';
 
 const Items = (props) => {
-  console.log(props.includePrice)
   return (
     <>
       {props.items
-      .filter(item=>props.showOnlyStock?item.stock>0:item)
-        .filter(item => item.name.toLowerCase().includes(props.query.toLowerCase())).map(item =>(
-        <tr key={item.id} onClick={()=>alert(`${item.name} - ${item.price}`)}>
-            <td>{item.name}</td>
-            <td>{`$${item.price}`}</td>
-            <td style={{textAlign:'center'}}>{item.stock}</td>
-        </tr>
-      ))}
+        .filter(item => props.showOnlyStock ? item.Units > 0 : true)
+        .filter(item => (
+          (item.courseName && item.courseName.toLowerCase().includes(props.query.toLowerCase())) ||
+          (item.courseNo && item.courseNo.toString().includes(props.query.toLowerCase()))
+        ))
+        .map(item => (
+          <tr key={item.id} onClick={() => alert(`${item.courseName} - Grade: ${item.Grade}`)}>
+            <td>{item.courseNo}</td>
+            <td>{item.courseName}</td>
+            <td style={{ textAlign: 'center' }}>{item.Units}</td>
+            <td style={{textAlign:"center"}}>{`${item.Grade}`}</td>
+          </tr>
+        ))}
     </>
-  )
-}
+  );
+};
 
-export default Items
+
+export default Items;
